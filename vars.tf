@@ -4,19 +4,72 @@
 # vim: et:ts=2:sw=2
 # -----------------------------------------------------------------------------
 variable "region" {
-  description = "The default DEV region"
-  default     = "us-west-2"
+  description = "Default Region"
+  # Defined = terraform.tfvars
 }
 
 variable "project" {
   description = "The Project Name"
-  default     = "stack"
+  # Defined = terraform.tfvars
+}
+
+variable "domain_name" {
+  description = "Our Domain Name"
+  # Defined = terraform.tfvars
 }
 
 variable "environment" {
   description = "The Deployment Environments"
-  default     = "DEV"
+  # Defined = terraform.tfvars
 }
+
+# -----------------------------------------------------------------------------
+# Network Definitions/Defaults
+# -----------------------------------------------------------------------------
+# Declare the data source
+data "aws_availability_zones" "available" {}
+
+# The Office
+variable "office_gateway" {
+  description = "CIDR blocks accessed publically."
+  # Defined = terraform.tfvars
+}
+
+# Admin COMMS port
+variable "comms_port" {
+  description = "The port the server will use for SSH requests"
+  default     = 22
+}
+
+# Web Calls
+variable "http_port" {
+  description = "The port used for outbound HTTP service requests"
+  default     = 80
+}
+
+# Secure Web Calls
+variable "https_port" {
+  description = "The port used for outbound HTTPS service requests"
+  default     = 443
+}
+
+# Define the app port
+variable "service_port" {
+  description = "The port the server will use for HTTP requests"
+  default     = 8000
+}
+
+# -----------------------------------------------------------------------------
+# CoreOS Stuff
+variable "channel" {
+  default = "stable"
+}
+
+variable "virtualization_type" {
+  default = "hvm"
+}
+
+# -----------------------------------------------------------------------------
 
 variable "pathKeyPriv" {
   default = "~/.ssh/id_rsa"
@@ -36,22 +89,6 @@ variable "instAdminUser" {
   default = "ubuntu"
 }
 
-# -----------------------------------------------------------------------------
-# Security Groups
-# -----------------------------------------------------------------------------
-# Web
-variable "source_cidr_block" {
-  description = "CIDR blocks that can access via web."
-  default     = "0.0.0.0/0"
-}
-
-# SSH
-variable "ssh_source_cidr_block" {
-  description = "CIDR blocks that can access via ssh."
-  default     = "108.184.69.16/32"
-
-  #default     = "${var.myIPAddress}"
-}
 
 # -----------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
@@ -67,26 +104,4 @@ variable "AMIS" {
   }
 }
 
-# Define COMMS port
-variable "comms_port" {
-  description = "The port the server will use for SSH requests"
-  default     = 22
-}
 
-# Define web call
-variable "http_port" {
-  description = "The port used for outbound HTTP service requests"
-  default     = 80
-}
-
-# Define Secure web call
-variable "https_port" {
-  description = "The port used for outbound HTTPS service requests"
-  default     = 443
-}
-
-# Define the app port
-variable "service_port" {
-  description = "The port the server will use for HTTP requests"
-  default     = 8000
-}
